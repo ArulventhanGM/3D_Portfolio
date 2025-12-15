@@ -82,8 +82,8 @@ export default function DecorativeItems() {
           <meshStandardMaterial color="#0a0a0a" roughness={0.2} metalness={0.8} />
         </RoundedBox>
         {/* Mouse scroll wheel */}
-        <mesh position={[0, 0.032, 0]} castShadow>
-          <cylinderGeometry args={[0.006, 0.006, 0.003, 16]} rotation={[0, 0, Math.PI / 2]} />
+        <mesh position={[0, 0.032, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+          <cylinderGeometry args={[0.006, 0.006, 0.003, 16]} />
           <meshStandardMaterial color="#1a1a1a" roughness={0.4} metalness={0.6} />
         </mesh>
       </group>

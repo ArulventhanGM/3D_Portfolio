@@ -42,8 +42,6 @@ export default function OfficeScene() {
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.3,  // Slightly brighter for better visibility
           outputColorSpace: THREE.SRGBColorSpace,
-          shadowMap: true,
-          shadowMapType: THREE.PCFSoftShadowMap,  // Softer shadow rendering
         }}
         dpr={[1, 2]}
         shadows="soft"

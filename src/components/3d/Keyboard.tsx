@@ -1,12 +1,12 @@
 'use client';
 
 import { useRef, useMemo } from 'react';
-import { Mesh } from 'three';
+import { Group } from 'three';
 import { RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 
 export default function Keyboard() {
-  const keyboardRef = useRef<Mesh>(null);
+  const keyboardRef = useRef<Group>(null);
 
   // Ultra-realistic materials
   const baseMaterial = useMemo(() => new THREE.MeshStandardMaterial({

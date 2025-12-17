@@ -19,6 +19,7 @@ export interface AppState {
   // Camera interaction state
   isPointerOnScreen: boolean;  // True when pointer is over monitor screen
   cameraMode: 'default' | 'monitor';  // Camera behavior mode
+  isCameraControlEnabled: boolean;  // True when user can drag/orbit the camera
   focused: boolean;
   hoveringMonitor: boolean;
   isDraggingWindow: boolean;
@@ -41,6 +42,7 @@ export interface AppState {
   setIsPointerOnScreen: (isOn: boolean) => void;  // New action for pointer state
   setHoveringMonitor: (hovering: boolean) => void;
   setCameraMode: (mode: 'default' | 'monitor') => void;
+  toggleCameraControl: () => void;  // Toggle camera control on/off
   setIsDraggingWindow: (dragging: boolean) => void;
   updateMousePosition: (position: { x: number; y: number }) => void;
   openWindow: (windowId: string) => void;
@@ -63,6 +65,7 @@ export const useAppStore = create<AppState>((set) => ({
   booted: false,
   isPointerOnScreen: false,
   cameraMode: 'default',
+  isCameraControlEnabled: false,  // Camera control starts disabled
   focused: false,
   hoveringMonitor: false,
   isDraggingWindow: false,
@@ -100,6 +103,14 @@ export const useAppStore = create<AppState>((set) => ({
   setHoveringMonitor: (hovering: boolean) => set({ hoveringMonitor: hovering }),
   
   setCameraMode: (mode: 'default' | 'monitor') => set({ cameraMode: mode }),
+  
+  toggleCameraControl: () => 
+    set((state) => ({ 
+      isCameraControlEnabled: !state.isCameraControlEnabled,
+      // Reset camera mode to default when disabling control
+      cameraMode: state.isCameraControlEnabled ? 'default' : state.cameraMode,
+      isPointerOnScreen: state.isCameraControlEnabled ? false : state.isPointerOnScreen,
+    })),
   
   setIsDraggingWindow: (dragging: boolean) => set({ isDraggingWindow: dragging }),
   

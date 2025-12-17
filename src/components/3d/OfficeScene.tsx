@@ -1,7 +1,7 @@
 'use client';
 
 import { Canvas } from '@react-three/fiber';
-import { PerspectiveCamera, ContactShadows } from '@react-three/drei';
+import { PerspectiveCamera, ContactShadows, OrbitControls } from '@react-three/drei';
 import { Suspense, useEffect } from 'react';
 import * as THREE from 'three';
 import Desk from './Desk';
@@ -12,16 +12,20 @@ import Bonsai from './Bonsai';
 import DecorativeItems from './DecorativeItems';
 import Lighting from './Lighting';
 import MonitorUI from '../ui/MonitorUI';
+import CameraControl from '../ui/CameraControl';
 import { useAppStore } from '@/state/store';
 import { usePointerCameraController } from '@/hooks/usePointerCameraController';
+import { useCameraReset } from '@/hooks/useCameraReset';
 
 function CameraController() {
   usePointerCameraController();
+  useCameraReset();
   return null;
 }
 
 export default function OfficeScene() {
   const updateMousePosition = useAppStore((state) => state.updateMousePosition);
+  const isCameraControlEnabled = useAppStore((state) => state.isCameraControlEnabled);
 
   // Track mouse position for parallax
   useEffect(() => {
@@ -53,8 +57,23 @@ export default function OfficeScene() {
           {/* Camera positioned for optimal desk view */}
           <PerspectiveCamera makeDefault position={[0, 2.5, 6]} fov={45} />
           
-          {/* Pointer-driven camera controller */}
-          <CameraController />
+          {/* Orbit Controls - enabled only when camera control is on */}
+          <OrbitControls
+            enabled={isCameraControlEnabled}
+            enablePan={false}
+            enableZoom={isCameraControlEnabled}
+            enableRotate={isCameraControlEnabled}
+            enableDamping={true}
+            dampingFactor={0.08}
+            minDistance={3}
+            maxDistance={10}
+            minPolarAngle={Math.PI / 6}
+            maxPolarAngle={Math.PI / 2.5}
+            target={[0, 0.6, 0]}
+          />
+          
+          {/* Pointer-driven camera controller - only when orbit is disabled */}
+          {!isCameraControlEnabled && <CameraController />}
           
           <Lighting />
           
@@ -81,6 +100,9 @@ export default function OfficeScene() {
       
       {/* Fullscreen Desktop UI */}
       <MonitorUI />
+      
+      {/* Camera Control Icon */}
+      <CameraControl />
     </div>
   );
 }

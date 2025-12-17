@@ -6,7 +6,7 @@ export default function AboutPage() {
       <h1 className="text-3xl font-bold mb-4">About Me</h1>
       <div className="space-y-4 text-gray-300">
         <p>
-          Welcome to my interactive portfolio! I&apos;m a passionate developer who loves
+          Welcome to my Arulventhan Portfolio! I&apos;m a passionate developer who loves
           creating immersive digital experiences.
         </p>
         <p>
@@ -21,4 +21,5 @@ export default function AboutPage() {
     </div>
   );
 }
+
 

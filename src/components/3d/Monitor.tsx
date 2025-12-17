@@ -13,7 +13,7 @@ export default function Monitor() {
   const screenRef = useRef<Mesh>(null);
   const glowRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
-  const { isMonitorOn, setIsPointerOnScreen, booted } = useAppStore();
+  const { isMonitorOn, setCameraMode, isCameraControlEnabled } = useAppStore();
   
   useCursor(hovered);
 
@@ -78,27 +78,35 @@ export default function Monitor() {
     }
   };
 
-  // Pointer enters screen - trigger camera focus
+  // Pointer enters screen - trigger camera focus (only if camera control is disabled)
   const handlePointerEnter = () => {
     setHovered(true);
-    setIsPointerOnScreen(true);  // Camera moves to monitor
+    if (!isCameraControlEnabled) {
+      setCameraMode('monitor');  // Camera moves to monitor
+    }
   };
 
   // Pointer leaves screen - reset camera
   const handlePointerLeave = () => {
     setHovered(false);
-    setIsPointerOnScreen(false);  // Camera returns to default
+    if (!isCameraControlEnabled) {
+      setCameraMode('default');  // Camera returns to default
+    }
   };
 
   // Handle pointer events on HTML overlay
   const handleHtmlPointerEnter = () => {
     setHovered(true);
-    setIsPointerOnScreen(true);
+    if (!isCameraControlEnabled) {
+      setCameraMode('monitor');
+    }
   };
 
   const handleHtmlPointerLeave = () => {
     setHovered(false);
-    setIsPointerOnScreen(false);
+    if (!isCameraControlEnabled) {
+      setCameraMode('default');
+    }
   };
 
   return (

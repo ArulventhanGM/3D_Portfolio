@@ -5,8 +5,8 @@ import '../styles/globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Interactive Portfolio',
-  description: 'A 3D interactive portfolio experience',
+  title: 'Arulventhan Portfolio',
+  description: 'A 3D Arulventhan Portfolio experience',
 };
 
 export default function RootLayout({
@@ -20,5 +20,6 @@ export default function RootLayout({
     </html>
   );
 }
+
 
 

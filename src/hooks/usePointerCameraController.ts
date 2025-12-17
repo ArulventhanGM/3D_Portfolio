@@ -17,27 +17,34 @@ const PARALLAX_ROTATION_LIMIT = 0.06;  // ±3.4 degrees
 
 export function usePointerCameraController() {
   const { camera } = useThree();
-  const { cameraMode, mousePosition, isPointerOnScreen, isDraggingWindow } = useAppStore();
+  const { cameraMode, mousePosition, isDraggingWindow, isCameraControlEnabled } = useAppStore();
   
   const targetPosition = useRef(new Vector3());
   const targetLookAt = useRef(new Vector3());
   const currentPosition = useRef(new Vector3());
   const currentLookAt = useRef(new Vector3());
   const parallaxOffset = useRef({ x: 0, y: 0 });
-
-  // Initialize refs
-  if (currentPosition.current.length() === 0) {
-    currentPosition.current.copy(DEFAULT_POSITION);
-    currentLookAt.current.copy(DEFAULT_TARGET);
-  }
+  const isInitialized = useRef(false);
 
   useFrame(() => {
+    // Initialize camera position on first frame
+    if (!isInitialized.current) {
+      currentPosition.current.copy(camera.position);
+      currentLookAt.current.copy(DEFAULT_TARGET);
+      isInitialized.current = true;
+    }
+
+    // Don't control camera when orbit controls are enabled
+    if (isCameraControlEnabled) {
+      return;
+    }
+
     // Don't apply camera movement while dragging windows
     if (isDraggingWindow) {
       return;
     }
 
-    // Set target based on camera mode
+    // Set target based on camera mode - reactive every frame
     if (cameraMode === 'monitor') {
       targetPosition.current.copy(MONITOR_POSITION);
       targetLookAt.current.copy(MONITOR_TARGET);
@@ -46,12 +53,12 @@ export function usePointerCameraController() {
       targetLookAt.current.copy(DEFAULT_TARGET);
     }
 
-    // Smooth lerp to target position
+    // Continuous smooth lerp to target position
     currentPosition.current.lerp(targetPosition.current, 0.05);
     currentLookAt.current.lerp(targetLookAt.current, 0.05);
 
-    // Apply parallax only when in monitor mode and pointer is on screen
-    if (cameraMode === 'monitor' && isPointerOnScreen) {
+    // Apply parallax only when in monitor mode
+    if (cameraMode === 'monitor') {
       // Normalize mouse position to -1 to 1 range
       const normalizedX = (mousePosition.x / window.innerWidth) * 2 - 1;
       const normalizedY = -(mousePosition.y / window.innerHeight) * 2 + 1;
@@ -60,7 +67,7 @@ export function usePointerCameraController() {
       const targetParallaxX = normalizedX * PARALLAX_STRENGTH;
       const targetParallaxY = normalizedY * PARALLAX_STRENGTH;
       
-      // Smooth parallax offset
+      // Smooth parallax offset with damping
       parallaxOffset.current.x = MathUtils.lerp(
         parallaxOffset.current.x,
         targetParallaxX,

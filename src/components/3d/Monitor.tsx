@@ -90,6 +90,17 @@ export default function Monitor() {
     setIsPointerOnScreen(false);  // Camera returns to default
   };
 
+  // Handle pointer events on HTML overlay
+  const handleHtmlPointerEnter = () => {
+    setHovered(true);
+    setIsPointerOnScreen(true);
+  };
+
+  const handleHtmlPointerLeave = () => {
+    setHovered(false);
+    setIsPointerOnScreen(false);
+  };
+
   return (
     <group ref={monitorRef} position={[0, 1.228, -0.3]}>
       {/* Monitor Stand - adjusted to sit on desk surface at 0.753 */}
@@ -142,6 +153,8 @@ export default function Monitor() {
               transformOrigin: 'center center',
             }}
             center
+            onPointerEnter={handleHtmlPointerEnter}
+            onPointerLeave={handleHtmlPointerLeave}
           >
             <MonitorScreenContent />
           </Html>

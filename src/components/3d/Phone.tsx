@@ -1,12 +1,12 @@
 'use client';
 
 import { useRef, useMemo } from 'react';
-import { Mesh } from 'three';
+import { Group } from 'three';
 import { RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 
 export default function Phone() {
-  const phoneRef = useRef<Mesh>(null);
+  const phoneRef = useRef<Group>(null);
 
   const phoneMaterial = useMemo(() => new THREE.MeshStandardMaterial({
     color: '#0a0a0a',
@@ -37,8 +37,8 @@ export default function Phone() {
       </mesh>
       
       {/* Camera bump */}
-      <mesh position={[0.025, 0.06, 0.008]} castShadow>
-        <cylinderGeometry args={[0.008, 0.008, 0.003, 16]} rotation={[Math.PI / 2, 0, 0]} />
+      <mesh position={[0.025, 0.06, 0.008]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+        <cylinderGeometry args={[0.008, 0.008, 0.003, 16]} />
         <meshStandardMaterial color="#1a1a1a" roughness={0.2} metalness={0.8} />
       </mesh>
     </group>

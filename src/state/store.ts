@@ -34,7 +34,7 @@ export interface AppState {
   // Actions
   turnOnMonitor: () => void;
   startBoot: () => void;
-  updateBootProgress: (progress: number) => void;
+  updateBootProgress: (progress: number | ((prev: number) => number)) => void;
   finishBoot: () => void;
   setBooted: (booted: boolean) => void;
   setFocused: (focused: boolean) => void;

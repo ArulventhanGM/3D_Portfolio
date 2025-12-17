@@ -111,3 +111,4 @@ MIT License - feel free to use this project for your own portfolio!
 This is a personal portfolio project, but suggestions and improvements are welcome!
 
 >>>>>>> master
+

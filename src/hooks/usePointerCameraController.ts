@@ -51,11 +51,15 @@ export function usePointerCameraController() {
     } else {
       targetPosition.current.copy(DEFAULT_POSITION);
       targetLookAt.current.copy(DEFAULT_TARGET);
+      // Reset parallax when leaving monitor mode
+      parallaxOffset.current.x = MathUtils.lerp(parallaxOffset.current.x, 0, 0.15);
+      parallaxOffset.current.y = MathUtils.lerp(parallaxOffset.current.y, 0, 0.15);
     }
 
-    // Continuous smooth lerp to target position
-    currentPosition.current.lerp(targetPosition.current, 0.05);
-    currentLookAt.current.lerp(targetLookAt.current, 0.05);
+    // Continuous smooth lerp to target position with adaptive speed
+    const lerpSpeed = cameraMode === 'monitor' ? 0.06 : 0.05;
+    currentPosition.current.lerp(targetPosition.current, lerpSpeed);
+    currentLookAt.current.lerp(targetLookAt.current, lerpSpeed);
 
     // Apply parallax only when in monitor mode
     if (cameraMode === 'monitor') {

@@ -17,34 +17,43 @@ export default function Monitor() {
   
   useCursor(hovered);
 
-  // Ultra-realistic PBR materials
+  // Ultra-realistic PBR materials with improved properties
   const screenOffMaterial = useMemo(() => new THREE.MeshStandardMaterial({
     color: '#000000',
     emissive: '#000000',
-    roughness: 0.15,
+    roughness: 0.2,
     metalness: 0.05,
+    envMapIntensity: 0.1,
   }), []);
 
   const screenOnMaterial = useMemo(() => new THREE.MeshStandardMaterial({
     color: '#0a0a0a',
     emissive: '#1a1a2e',
-    emissiveIntensity: 0.5,
-    roughness: 0.1,
+    emissiveIntensity: 0.6,
+    roughness: 0.08,
     metalness: 0.0,
+    envMapIntensity: 0.2,
+  }), []);
+
+  const bezelMaterial = useMemo(() => new THREE.MeshStandardMaterial({
+    color: '#0a0a0a',
+    roughness: 0.2,
+    metalness: 0.85,
+    envMapIntensity: 1.2,
   }), []);
 
   const glassOverlayMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
     color: '#ffffff',
     transparent: true,
-    opacity: 0.08,  // Slightly more visible glass reflection
-    roughness: 0.05,
+    opacity: 0.1,
+    roughness: 0.0,
     metalness: 0.0,
-    transmission: 0.92,
+    transmission: 0.95,
     thickness: 0.5,
     ior: 1.5,
-    reflectivity: 0.4,  // Enhanced reflectivity for realism
-    clearcoat: 0.3,     // Glass coating effect
-    clearcoatRoughness: 0.1,
+    reflectivity: 0.5,
+    clearcoat: 0.4,
+    clearcoatRoughness: 0.05,
   }), []);
 
   const glowMaterial = useMemo(() => new THREE.MeshBasicMaterial({
@@ -130,7 +139,7 @@ export default function Monitor() {
       
       {/* Monitor Bezel */}
       <RoundedBox args={[1.5, 0.9, 0.03]} radius={0.015} smoothness={8} position={[0, 0.3, 0.025]} castShadow>
-        <meshStandardMaterial color="#0a0a0a" roughness={0.15} metalness={0.8} />
+        <primitive object={bezelMaterial} />
       </RoundedBox>
       
       {/* Screen Surface - Dedicated screen mesh for OS rendering */}
@@ -147,18 +156,22 @@ export default function Monitor() {
         <planeGeometry args={[1.32, 0.77]} />
         <primitive object={isMonitorOn ? screenOnMaterial : screenOffMaterial} />
         
-        {/* OS UI - Rendered directly on screen mesh with hard clipping */}
+        {/* OS UI - Rendered directly on screen mesh with exact fit */}
         {isMonitorOn && (
           <Html
             transform
             occlude={false}
-            distanceFactor={0.5}  // Scale down to fit screen exactly
-            position={[0, 0, 0.002]}  // Slightly in front of screen mesh
+            distanceFactor={0.5}
+            position={[0, 0, 0.002]}
             style={{
               width: '1320px',
               height: '770px',
               pointerEvents: isMonitorOn ? 'auto' : 'none',
               transformOrigin: 'center center',
+              overflow: 'hidden',
+              clipPath: 'inset(0)',
+              margin: 0,
+              padding: 0,
             }}
             center
             onPointerEnter={handleHtmlPointerEnter}

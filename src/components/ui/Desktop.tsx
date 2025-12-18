@@ -106,6 +106,7 @@ export default function Desktop() {
         position: 'absolute',
         top: 0,
         left: 0,
+        boxSizing: 'border-box',
       }}
     >
       {/* Windows-style wallpaper with subtle pattern */}

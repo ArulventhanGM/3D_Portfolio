@@ -13,6 +13,7 @@ import DecorativeItems from './DecorativeItems';
 import Lighting from './Lighting';
 import MonitorUI from '../ui/MonitorUI';
 import CameraControl from '../ui/CameraControl';
+import CameraResetButton from '../ui/CameraResetButton';
 import { useAppStore } from '@/state/store';
 import { usePointerCameraController } from '@/hooks/usePointerCameraController';
 import { useCameraReset } from '@/hooks/useCameraReset';
@@ -80,11 +81,11 @@ export default function OfficeScene() {
           {/* Contact shadows for enhanced realism */}
           <ContactShadows
             position={[0, 0.01, 0]}
-            opacity={0.4}
-            scale={10}
-            blur={2}
-            far={4}
-            resolution={256}
+            opacity={0.5}
+            scale={12}
+            blur={3}
+            far={5}
+            resolution={512}
             color="#000000"
           />
           
@@ -103,6 +104,9 @@ export default function OfficeScene() {
       
       {/* Camera Control Icon */}
       <CameraControl />
+      
+      {/* Camera Reset Button */}
+      <CameraResetButton />
     </div>
   );
 }

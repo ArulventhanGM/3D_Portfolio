@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useThree } from '@react-three/fiber';
+import { useThree, useFrame } from '@react-three/fiber';
 import { Vector3 } from 'three';
 import { useAppStore } from '@/state/store';
 
@@ -8,43 +8,41 @@ const DEFAULT_TARGET = new Vector3(0, 0.6, 0);
 
 export function useCameraReset() {
   const { camera } = useThree();
-  const { isCameraControlEnabled } = useAppStore();
+  const { isCameraControlEnabled, resetCamera } = useAppStore();
   const wasEnabled = useRef(false);
-  const animationFrame = useRef<number>();
+  const isResetting = useRef(false);
+  const resetStartPos = useRef<Vector3 | null>(null);
+  const resetStartTime = useRef<number>(0);
 
   useEffect(() => {
     // Detect when camera control is turned OFF
     if (wasEnabled.current && !isCameraControlEnabled) {
-      // Smoothly animate camera back to default position
-      const startPos = camera.position.clone();
-      const startTime = Date.now();
-      const duration = 1000; // 1 second animation
-
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // Smooth easing
-        const eased = 1 - Math.pow(1 - progress, 3);
-        
-        // Interpolate position
-        camera.position.lerpVectors(startPos, DEFAULT_POSITION, eased);
-        camera.lookAt(DEFAULT_TARGET);
-        
-        if (progress < 1) {
-          animationFrame.current = requestAnimationFrame(animate);
-        }
-      };
-      
-      animate();
+      isResetting.current = true;
+      resetStartPos.current = camera.position.clone();
+      resetStartTime.current = Date.now();
     }
     
     wasEnabled.current = isCameraControlEnabled;
-    
-    return () => {
-      if (animationFrame.current) {
-        cancelAnimationFrame(animationFrame.current);
-      }
-    };
   }, [isCameraControlEnabled, camera]);
+
+  useFrame(() => {
+    if (isResetting.current && resetStartPos.current) {
+      const elapsed = Date.now() - resetStartTime.current;
+      const duration = 1000; // 1 second
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Smooth easing (ease-out cubic)
+      const eased = 1 - Math.pow(1 - progress, 3);
+      
+      // Interpolate position
+      camera.position.lerpVectors(resetStartPos.current, DEFAULT_POSITION, eased);
+      camera.lookAt(DEFAULT_TARGET);
+      
+      if (progress >= 1) {
+        isResetting.current = false;
+        resetStartPos.current = null;
+        resetCamera(); // Update state
+      }
+    }
+  });
 }

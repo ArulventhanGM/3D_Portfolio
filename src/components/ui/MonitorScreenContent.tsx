@@ -15,14 +15,16 @@ export default function MonitorScreenContent() {
       style={{
         width: '100%',
         height: '100%',
-        position: 'relative',
+        position: 'absolute',
+        top: 0,
+        left: 0,
         overflow: 'hidden',
-        aspectRatio: '1.714',  // Match screen plane aspect ratio (1.32 / 0.77)
         margin: 0,
         padding: 0,
         backgroundColor: '#0a0a0a',
-        borderRadius: '4px',
         boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       {isBooting && <BootSequence />}

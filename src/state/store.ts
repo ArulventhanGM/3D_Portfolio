@@ -54,6 +54,7 @@ export interface AppState {
   updateWindowPosition: (windowId: string, position: { x: number; y: number }) => void;
   toggleFullscreen: () => void;
   exitFullscreen: () => void;
+  resetCamera: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -219,5 +220,10 @@ export const useAppStore = create<AppState>((set) => ({
   toggleFullscreen: () => set((state) => ({ isFullscreen: !state.isFullscreen })),
   
   exitFullscreen: () => set({ isFullscreen: false }),
+  
+  resetCamera: () => set({ 
+    cameraMode: 'default',
+    isPointerOnScreen: false,
+  }),
 }));
 

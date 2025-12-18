@@ -26,8 +26,8 @@ export default function Lighting() {
       <directionalLight
         ref={keyLightRef}
         position={[8, 12, 6]}
-        intensity={2.0}
-        color="#ffffff"
+        intensity={2.2}
+        color="#fff8f0"
         castShadow
         shadow-mapSize-width={4096}
         shadow-mapSize-height={4096}
@@ -38,7 +38,7 @@ export default function Lighting() {
         shadow-camera-bottom={-15}
         shadow-bias={-0.0005}
         shadow-normalBias={0.05}
-        shadow-radius={3}  // Softer shadows
+        shadow-radius={4}  // Softer shadows
       />
       
       {/* Fill Light - soft indirect lighting from left */}
